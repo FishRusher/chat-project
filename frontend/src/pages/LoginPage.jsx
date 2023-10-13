@@ -1,6 +1,6 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef } from 'react'
 import { Box, Button, Paper, TextField } from "@mui/material"
-import {useNavigate} from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
 const LoginPage = () => {
   let nick = useRef(null)
@@ -22,23 +22,23 @@ const LoginPage = () => {
       method: "POST",
       body: data
     }).then(response => response.json())
-    .then(response => {
-      try {
-        if (response["status"] === "LOGGED") {
-          localStorage.setItem("jwt", response["jwt"])
-          navigate("/")
+      .then(response => {
+        try {
+          if (response["status"] === "LOGGED") {
+            localStorage.setItem("jwt", response["jwt"])
+            navigate("/")
+          }
+          else {
+            // to ADD
+          }
         }
-        else {
-          // to ADD
+        catch (e) {
+          alert("Błąd danych")
         }
-      }
-      catch(e) {
-        alert("Błąd danych")
-      }
-    })
-    .catch(error => {
-      alert("Błąd")
-    })
+      })
+      .catch(error => {
+        alert("Błąd")
+      })
 
   }
 
