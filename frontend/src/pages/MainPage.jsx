@@ -1,6 +1,6 @@
 import { Box, Button, Paper } from '@mui/material'
 import React, { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import UsersList from '../components/UsersList'
 import { Logout } from '@mui/icons-material'
 
@@ -29,7 +29,9 @@ const MainPage = () => {
                 </Paper>
             </Box>
 
-            <Paper elevation={5} sx={{ height: "100%", flexGrow: 3, flexBasis: 0 }}></Paper>
+            <Paper elevation={5} sx={{ height: "100%", flexGrow: 3, flexBasis: 0 }}>
+                <Outlet></Outlet>
+            </Paper>
         </Box>
     )
 }
