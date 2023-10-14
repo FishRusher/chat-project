@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { Avatar, Box, Button, IconButton, Paper, TextField } from "@mui/material"
+import { Avatar, Box, Button, Paper, TextField } from "@mui/material"
 import { useParams } from "react-router-dom"
-import { blue } from '@mui/material/colors'
+
 import ChatMessage from './ChatMessage'
 import { Send } from '@mui/icons-material'
 
@@ -19,7 +19,15 @@ const ChatBox = () => {
             { message_id: 3, incoming: false, message_content: "coś Lorem, ipsum dolor sit amet consectetur", message_date: new Date() },
             { message_id: 4, incoming: true, message_content: "coś", message_date: new Date() },
             { message_id: 5, incoming: true, message_content: "coś", message_date: new Date() },
-            { message_id: 6, incoming: true, message_content: "coś", message_date: new Date() },
+            // { message_id: 6, incoming: true, message_content: "coś", message_date: new Date() },
+            // { message_id: 3, incoming: false, message_content: "coś Lorem, ipsum dolor sit amet consectetur", message_date: new Date() },
+            // { message_id: 4, incoming: true, message_content: "coś", message_date: new Date() },
+            // { message_id: 5, incoming: true, message_content: "coś", message_date: new Date() },
+            // { message_id: 6, incoming: true, message_content: "coś", message_date: new Date() },
+            // { message_id: 3, incoming: false, message_content: "coś Lorem, ipsum dolor sit amet consectetur", message_date: new Date() },
+            // { message_id: 4, incoming: true, message_content: "coś", message_date: new Date() },
+            // { message_id: 5, incoming: true, message_content: "coś", message_date: new Date() },
+            // { message_id: 6, incoming: true, message_content: "coś", message_date: new Date() },
         ])
 
     }
@@ -35,12 +43,12 @@ const ChatBox = () => {
                 <Box sx={{ fontWeight: 900, fontSize: 30 }}>Nickname</Box>
             </Paper>
             <Box sx={{ p: 2, gap: 2, flexGrow: 1, display: "flex", overflow: "hidden", flexDirection: "column" }}>
-                <Box sx={{ flexGrow: 1, overflow: "scroll" }}>
+                <Box sx={{ flexGrow: 1, flexBasis: 0, overflow: "scroll" }}>
                     {chat.map(m => <ChatMessage key={m.message_id} message={m}></ChatMessage>)}
                 </Box>
-                <Box sx={{display: "flex", alignItems: "center"}}>
+                <Box sx={{ display: "flex", alignItems: "center" }}>
                     <TextField maxRows={2} multiline fullWidth InputProps={{ sx: { borderRadius: 100 } }} placeholder='Napisz wiadomość...'></TextField>
-                    <IconButton sx={{p: 2, m: 1}} children={<Send fontSize='large' sx={{color: blue[700]}}></Send>}></IconButton>
+                    <Button variant='contained' sx={{ p: 2, m: 1, borderRadius: 100 }}><Send fontSize='large' sx={{ color: "white" }}></Send></Button>
                 </Box>
             </Box>
         </Box >
