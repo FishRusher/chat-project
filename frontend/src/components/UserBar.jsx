@@ -1,26 +1,9 @@
 import { Avatar, Button, Card } from '@mui/material'
 import React from 'react'
 import { NavLink } from 'react-router-dom'
+import { getInitials, randomColor } from '../functions'
 
 const UserBar = ({ user }) => {
-
-    function getInitials(nick) {
-        let letters = [...nick]
-        let n = letters.length
-        return letters[0] + letters[parseInt(n / 2)]
-    }
-
-    function randomColor(n) {
-        n = n * n * n * n
-        n *= 53
-        let r, g, b
-        r = n % 255
-        n *= 83
-        g = n % 255
-        n *= 59
-        b = n % 255
-        return `rgb(${r},${g},${b})`
-    }
 
     return (
         <NavLink to={"/chat/" + user.user_id}>

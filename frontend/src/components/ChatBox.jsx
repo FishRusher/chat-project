@@ -1,24 +1,49 @@
-import React from 'react'
-import { Avatar, Box, Paper } from "@mui/material"
+import React, { useEffect, useState } from 'react'
+import { Avatar, Box, Button, IconButton, Paper, TextField } from "@mui/material"
 import { useParams } from "react-router-dom"
+import { blue } from '@mui/material/colors'
+import ChatMessage from './ChatMessage'
+import { Send } from '@mui/icons-material'
 
 const ChatBox = () => {
     const { user_id } = useParams()
+    const [chat, setChat] = useState([])
 
     function getChat() {
 
+        // DB CONNECTION
+
+        setChat([
+            { message_id: 1, incoming: true, message_content: "    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Harum ipsa accusamus vero tempore velit similique dignissimos dicta rerum modi quaerat minima impedit vitae illo commodi inventore voluptate officia sunt pariatur ab incidunt et, laudantium itaque? Hic perspiciatis possimus inventore corrupti laborum reiciendis ut nisi iure ad, ab doloremque neque non sit unde aut porro aperiam? Neque eius ex hic itaque, quae ad ratione distinctio voluptatem modi, eum incidunt nemo corrupti blanditiis. Fugit, nam nihil? Quia odio reiciendis nulla sed ipsum deleniti, omnis cum dicta dolorem, laboriosam magnam beatae, non quod inventore libero alias delectus culpa earum. Architecto unde sint cum.", message_date: new Date() },
+            { message_id: 2, incoming: true, message_content: "coś", message_date: new Date() },
+            { message_id: 3, incoming: false, message_content: "coś Lorem, ipsum dolor sit amet consectetur", message_date: new Date() },
+            { message_id: 4, incoming: true, message_content: "coś", message_date: new Date() },
+            { message_id: 5, incoming: true, message_content: "coś", message_date: new Date() },
+            { message_id: 6, incoming: true, message_content: "coś", message_date: new Date() },
+        ])
+
     }
+
+    useEffect(() => {
+        getChat()
+    }, [])
 
     return (
         <Box sx={{ p: 2, display: "flex", flexDirection: "column", gap: 2, height: "100%" }}>
-            <Paper elevation={1} sx={{ p: 2, display: "flex", justifyContent: "center", alignItems: "center", gap: 2 }}>
+            <Paper elevation={2} sx={{ p: 2, display: "flex", justifyContent: "center", alignItems: "center", gap: 2, border: 1 }}>
                 <Avatar></Avatar>
                 <Box sx={{ fontWeight: 900, fontSize: 30 }}>Nickname</Box>
             </Paper>
-            <Paper elevation={1} sx={{ p: 2, gap: 2, flexGrow: 1, display: "block" }}>
-
-            </Paper>
-        </Box>
+            <Box sx={{ p: 2, gap: 2, flexGrow: 1, display: "flex", overflow: "hidden", flexDirection: "column" }}>
+                <Box sx={{ flexGrow: 1, overflow: "scroll" }}>
+                    {chat.map(m => <ChatMessage key={m.message_id} message={m}></ChatMessage>)}
+                </Box>
+                <Box sx={{display: "flex", alignItems: "center"}}>
+                    <TextField maxRows={2} multiline fullWidth InputProps={{ sx: { borderRadius: 100 } }} placeholder='Napisz wiadomość...'></TextField>
+                    <IconButton sx={{p: 2, m: 1}} children={<Send fontSize='large' sx={{color: blue[700]}}></Send>}></IconButton>
+                </Box>
+            </Box>
+        </Box >
     )
 }
 
