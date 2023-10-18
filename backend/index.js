@@ -71,6 +71,26 @@ app.post('/backend/login', (req, res) => {
 
 });
 
+app.post('/backend/getUsers', (req, res) => {
+    let jwtSecretKey = process.env.JWT_SECRET_KEY
+    let token = req.body.jwt
+    let decoded = jwt.verify(token, jwtSecretKey);
+    let nick = decoded.nick
+    let password = decoded.password
+    let hashed_password = MD5(password).toString()
+
+    conn.connect( (err) => {
+        if(err)
+            throw err
+        let query = `select * from users where user_nick!='${nick}''`
+        conn.query(query, (err, result, fields) => {
+            if(err)
+                throw err
+        
+        })
+    })
+
+});
 
 const port = process.env.PORT;
 
