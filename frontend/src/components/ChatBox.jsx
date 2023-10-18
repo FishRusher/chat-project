@@ -1,54 +1,101 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Avatar, Box, Button, Paper, TextField } from "@mui/material"
-import { useParams } from "react-router-dom"
-
+import { useNavigate, useParams } from "react-router-dom"
+import { randomColor, getInitials } from '../functions'
 import ChatMessage from './ChatMessage'
 import { Send } from '@mui/icons-material'
 
 const ChatBox = () => {
-    const { user_id } = useParams()
+    const receiver_id = useParams()["user_id"]
     const [chat, setChat] = useState([])
+    const [receiverNick, setReceiverNick] = useState("???")
+    const navigate = useNavigate()
+
+    const messageInput = useRef(null)
+
+    function sendMessage() {
+        if (messageInput.current === null) return
+        const message = messageInput.current.value
+        if (message === "" || message === null) return
+
+        const jwt = localStorage.getItem("jwt")
+        const data = new FormData()
+
+        data.append("jwt", jwt)
+        data.append("message", message)
+        data.append("receiver_id", receiver_id)
+
+        fetch(`${process.env.REACT_APP_BACKEND_ADDRESS}/sendMessage`, {
+            method: "POST",
+            body: data
+        }).then(response => response.json())
+            .then(response => {
+                if (response.status === "TOKEN_EXPIRED") {
+                    localStorage.removeItem("jwt")
+                    navigate("/login")
+                }
+                if (response.status === "OK") {
+                    getChat()
+                }
+            })
+            .catch(e => {
+                alert("Błąd")
+            })
+    }
 
     function getChat() {
+        const jwt = localStorage.getItem("jwt")
+        const data = new FormData()
+        data.append("jwt", jwt)
+        data.append("receiver_id", receiver_id)
 
-        // DB CONNECTION
+        fetch(`${process.env.REACT_APP_BACKEND_ADDRESS}/getChat`, {
+            method: "POST",
+            body: data
+        }).then(response => response.json())
+            .then(response => {
+                if (response.status === "TOKEN_EXPIRED") {
+                    localStorage.removeItem("jwt")
+                    navigate("/login")
+                }
+                if (response.status === "INVALID_USER") {
+                    navigate("/")
+                }
+                setChat(response.messages)
+                setReceiverNick(response.receiver_nick)
+            })
+            .catch(e => {
 
-        setChat([
-            { message_id: 1, incoming: true, message_content: "    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Harum ipsa accusamus vero tempore velit similique dignissimos dicta rerum modi quaerat minima impedit vitae illo commodi inventore voluptate officia sunt pariatur ab incidunt et, laudantium itaque? Hic perspiciatis possimus inventore corrupti laborum reiciendis ut nisi iure ad, ab doloremque neque non sit unde aut porro aperiam? Neque eius ex hic itaque, quae ad ratione distinctio voluptatem modi, eum incidunt nemo corrupti blanditiis. Fugit, nam nihil? Quia odio reiciendis nulla sed ipsum deleniti, omnis cum dicta dolorem, laboriosam magnam beatae, non quod inventore libero alias delectus culpa earum. Architecto unde sint cum.", message_date: new Date() },
-            { message_id: 2, incoming: true, message_content: "coś", message_date: new Date() },
-            { message_id: 3, incoming: false, message_content: "coś Lorem, ipsum dolor sit amet consectetur", message_date: new Date() },
-            { message_id: 4, incoming: true, message_content: "coś", message_date: new Date() },
-            { message_id: 5, incoming: true, message_content: "coś", message_date: new Date() },
-            // { message_id: 6, incoming: true, message_content: "coś", message_date: new Date() },
-            // { message_id: 3, incoming: false, message_content: "coś Lorem, ipsum dolor sit amet consectetur", message_date: new Date() },
-            // { message_id: 4, incoming: true, message_content: "coś", message_date: new Date() },
-            // { message_id: 5, incoming: true, message_content: "coś", message_date: new Date() },
-            // { message_id: 6, incoming: true, message_content: "coś", message_date: new Date() },
-            // { message_id: 3, incoming: false, message_content: "coś Lorem, ipsum dolor sit amet consectetur", message_date: new Date() },
-            // { message_id: 4, incoming: true, message_content: "coś", message_date: new Date() },
-            // { message_id: 5, incoming: true, message_content: "coś", message_date: new Date() },
-            // { message_id: 6, incoming: true, message_content: "coś", message_date: new Date() },
-        ])
+            })
 
     }
 
     useEffect(() => {
         getChat()
+
+        const int = setInterval(getChat, 2000)
+
+        return () => {
+            clearInterval(int)
+        }
     }, [])
 
     return (
         <Box sx={{ p: 2, display: "flex", flexDirection: "column", gap: 2, height: "100%" }}>
             <Paper elevation={2} sx={{ p: 2, display: "flex", justifyContent: "center", alignItems: "center", gap: 2, border: 1 }}>
-                <Avatar></Avatar>
-                <Box sx={{ fontWeight: 900, fontSize: 30 }}>Nickname</Box>
+                <Avatar sx={{ bgcolor: randomColor(receiver_id) }}>{getInitials(receiverNick)}</Avatar>
+                <Box sx={{ fontWeight: 900, fontSize: 30 }}>{receiverNick}</Box>
             </Paper>
             <Box sx={{ p: 2, gap: 2, flexGrow: 1, display: "flex", overflow: "hidden", flexDirection: "column" }}>
                 <Box sx={{ flexGrow: 1, flexBasis: 0, overflow: "scroll" }}>
                     {chat.map(m => <ChatMessage key={m.message_id} message={m}></ChatMessage>)}
+                    {chat.length === 0 && <Box sx={{ textAlign: 'center', paddingTop: 3, color: '#909090' }}>Konwersacja jeszcze nie rozpoczęta</Box>}
                 </Box>
                 <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <TextField maxRows={2} multiline fullWidth InputProps={{ sx: { borderRadius: 100 } }} placeholder='Napisz wiadomość...'></TextField>
-                    <Button variant='contained' sx={{ p: 2, m: 1, borderRadius: 100 }}><Send fontSize='large' sx={{ color: "white" }}></Send></Button>
+                    <TextField maxRows={2} multiline fullWidth InputProps={{ sx: { borderRadius: 100 } }} placeholder='Napisz wiadomość...' inputRef={messageInput}></TextField>
+                    <Button variant='contained' sx={{ p: 2, m: 1, borderRadius: 100 }} onClick={sendMessage}>
+                        <Send fontSize='large' sx={{ color: "white" }}></Send>
+                    </Button>
                 </Box>
             </Box>
         </Box >
