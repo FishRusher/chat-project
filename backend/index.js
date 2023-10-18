@@ -2,6 +2,7 @@ const express = require("express");
 const mysql = require("mysql");
 const jwt = require("jsonwebtoken");
 const dotenv = require('dotenv'); 
+const MD5 = require("crypto-js/md5");
 
 const app = express()
 
@@ -13,11 +14,12 @@ app.use(express.urlencoded()); // to support URL-encoded bodies
 app.get('/', (req, res) => {
     res.send('Hello from express');
 });
+console.log(process.env.JWT_SECRET_KEY)
 
 app.post('/backend/login', (req, res) => {
     let nick = req.body.user_nick
     let password = req.body.user_password
-    let hashed_password = md5(password)
+    let hashed_password = MD5(password).toString()
 
     let conn = mysql.createConnection({
         host: "localhost",
@@ -29,24 +31,23 @@ app.post('/backend/login', (req, res) => {
     conn.connect( (err) => {
         if(err)
             throw err
-        let query = `select * from students where user_nick='${nick}' and password='${hashed_password}'`
+        let query = `select * from users where user_nick='${nick}' and user_password='${hashed_password}'`
         conn.query(query, (err, result, fields) => {
             if(err)
                 throw err
             let token = null;
             if(result.length){
-                // res.writeHead(200, {"Content-type": "application/json"})
                 let jwtSecretKey = process.env.JWT_SECRET_KEY; 
+                let algorithm = process.env.ALGORITHM
                 token = jwt.sign(
                     {
-                    "alg": "HS256",
-                    "typ": "JWT"
-                    },
-                    {
                         "nick": nick,
-                        "password": hashed_password
+                        "password": password
                     },
-                    jwtSecretKey
+                    jwtSecretKey,
+                    {
+                    "algorithm": algorithm
+                    }
                 )
                 return res.status(200).send(JSON.stringify(
                     {
@@ -71,6 +72,6 @@ app.post('/backend/login', (req, res) => {
 });
 
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 
 app.listen(port, () => console.log(`App listening on PORT ${port}`));
