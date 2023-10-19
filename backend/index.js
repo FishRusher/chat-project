@@ -45,7 +45,8 @@ app.post('/backend/login', (req, res) => {
                     },
                     jwtSecretKey,
                     {
-                    "algorithm": algorithm
+                        "algorithm": algorithm,
+                        "expiresIn": '10m'
                     }
                 )
                 return res.status(200).send(JSON.stringify(
@@ -81,7 +82,7 @@ app.post('/backend/getUsers', (req, res) => {
                 {
                     status: "TOKEN_EXPIRED"
                 }
-                ))
+            ))
         }
 
         let nick = decoded.nick
