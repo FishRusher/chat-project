@@ -12,12 +12,16 @@ const UsersList = () => {
     useEffect(() => {
         function getUsers() {
             const jwt = localStorage.getItem("jwt")
-            const data = new FormData()
-            data.append("jwt", jwt)
+            const data = {}
+            data["jwt"] = jwt
 
             fetch(`${process.env.REACT_APP_BACKEND_ADDRESS}/getUsers`, {
                 method: "POST",
-                body: data
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
             }).then(response => response.json())
                 .then(response => {
                     if (response.status === "TOKEN_EXPIRED") {
