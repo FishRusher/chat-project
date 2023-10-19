@@ -1,11 +1,12 @@
 const express = require("express");
 const mysql = require("mysql");
 const jwt = require("jsonwebtoken");
-const dotenv = require('dotenv'); 
+const dotenv = require('dotenv');
 const MD5 = require("crypto-js/md5");
 const cors = require("cors");
-const {login} = require("./routes/login");
-const {getUsers} = require("./routes/getUsers");
+const { login } = require("./routes/login");
+const { getUsers } = require("./routes/getUsers");
+const { register } = require("./routes/register");
 
 const app = express()
 
@@ -22,6 +23,8 @@ app.get('/', (req, res) => {
 app.post('/backend/login', login);
 
 app.post('/backend/getUsers', getUsers);
+
+app.post('/backend/register', register);
 
 const port = process.env.PORT;
 
