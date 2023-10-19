@@ -36,8 +36,8 @@ app.post('/backend/login', (req, res) => {
                 throw err
             let token = null;
             if(result.length){
-                let jwtSecretKey = process.env.JWT_SECRET_KEY; 
-                let algorithm = process.env.ALGORITHM
+                let jwtSecretKey = process.env.JWT_SECRET_KEY;
+                let algorithm = process.env.ALGORITHM;
                 token = jwt.sign(
                     {
                         "nick": nick,
@@ -75,10 +75,9 @@ app.post('/backend/getUsers', (req, res) => {
     let jwtSecretKey = process.env.JWT_SECRET_KEY
     let token = req.body.jwt
     
-    
     jwt.verify(token, jwtSecretKey, function(err, decoded) {
         if(err){
-            return res.status(404).send(JSON.stringify(
+            return res.status(401).send(JSON.stringify(
                 {
                     status: "TOKEN_EXPIRED"
                 }
@@ -114,8 +113,6 @@ app.post('/backend/getUsers', (req, res) => {
             })
         })
     });
-
-
 
 });
 
