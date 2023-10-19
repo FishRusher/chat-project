@@ -20,14 +20,18 @@ const RegisterPage = () => {
         if (p1 === "" || p1 === undefined) return
         if (p2 === "" || p2 === undefined) return
         if (p1 !== p2) return
-        let data = new FormData()
-        data.append("user_nick", n)
-        data.append("user_password", p1)
+        let data = {}
+        data["user_nick"] = n
+        data["user_password"] = p1
 
 
         fetch(`${process.env.REACT_APP_BACKEND_ADDRESS}/register`, {
             method: "POST",
-            body: data
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
         }).then(response => response.json())
             .then(response => {
                 try {

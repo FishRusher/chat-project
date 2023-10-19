@@ -14,13 +14,17 @@ const LoginPage = () => {
         let p = pass.current.value
         if (n === "" || n === undefined) return
         if (p === "" || p === undefined) return
-        let data = new FormData()
-        data.append("user_nick", n)
-        data.append("user_password", p)
+        let data = {}
+        data["user_nick"] = n
+        data["user_password"] = p
 
         fetch(`${process.env.REACT_APP_BACKEND_ADDRESS}/login`, {
             method: "POST",
-            body: data
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
         }).then(response => response.json())
             .then(response => {
                 try {

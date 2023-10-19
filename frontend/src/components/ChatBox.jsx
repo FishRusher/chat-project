@@ -19,15 +19,19 @@ const ChatBox = () => {
         if (message === "" || message === null) return
 
         const jwt = localStorage.getItem("jwt")
-        const data = new FormData()
+        const data = {}
 
-        data.append("jwt", jwt)
-        data.append("message", message)
-        data.append("receiver_id", receiver_id)
+        data["jwt"] = jwt
+        data["message"] = message
+        data["receiver_id"] = receiver_id
 
         fetch(`${process.env.REACT_APP_BACKEND_ADDRESS}/sendMessage`, {
             method: "POST",
-            body: data
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
         }).then(response => response.json())
             .then(response => {
                 if (response.status === "TOKEN_EXPIRED") {
@@ -45,13 +49,17 @@ const ChatBox = () => {
 
     function getChat() {
         const jwt = localStorage.getItem("jwt")
-        const data = new FormData()
-        data.append("jwt", jwt)
-        data.append("receiver_id", receiver_id)
+        const data = {}
+        data["jwt"] = jwt
+        data["receiver_id"] = receiver_id
 
         fetch(`${process.env.REACT_APP_BACKEND_ADDRESS}/getChat`, {
             method: "POST",
-            body: data
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
         }).then(response => response.json())
             .then(response => {
                 if (response.status === "TOKEN_EXPIRED") {
