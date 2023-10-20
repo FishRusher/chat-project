@@ -7,6 +7,7 @@ const cors = require("cors");
 const { login } = require("./routes/login");
 const { getUsers } = require("./routes/getUsers");
 const { register } = require("./routes/register");
+const { sendMessage } = require("./routes/sendMessage");
 
 const app = express()
 
@@ -25,6 +26,8 @@ app.post('/backend/login', login);
 app.post('/backend/getUsers', getUsers);
 
 app.post('/backend/register', register);
+
+app.post('/backend/sendMessage', sendMessage);
 
 const port = process.env.PORT;
 

@@ -22,7 +22,7 @@ const register = (req, res) => {
             if (err)
                 throw err
             if (result.length !== 0) {
-                return res.status(200).send(JSON.stringify(
+                return res.status(409).send(JSON.stringify(
                     {
                         status: "USER_EXISTS",
                     }))
@@ -30,7 +30,7 @@ const register = (req, res) => {
             else {
                 query = `insert into users values('', '${nick}', '${hashed_password}')`
                 conn.query(query, (error, result, fields) => {
-                    if (error) return res.status(200).send(JSON.stringify(
+                    if (error) return res.status(500).send(JSON.stringify(
                         {
                             status: "ERROR",
                         }
