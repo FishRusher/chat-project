@@ -35,7 +35,7 @@ const getChat = (req, res) => {
         let query = `select * from chatroom_message where receiver_id='${receiver_id}' and sender_id='${sender_id}'`
         conn.query(query, (err, result, fields) => {
             if(err){
-                return res.status(401).send(JSON.stringify(
+                return res.status(404).send(JSON.stringify(
                     {
                         status: "INVALID_USER"
                     }
@@ -53,7 +53,7 @@ const getChat = (req, res) => {
             let query2 = `select * from chatroom_message where receiver_id='${sender_id}' and sender_id='${receiver_id}'`
             conn.query(query2, (err, result, fields) => {
                 if(err){
-                    return res.status(401).send(JSON.stringify(
+                    return res.status(404).send(JSON.stringify(
                         {
                             status: "INVALID_USER"
                         }
