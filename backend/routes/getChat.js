@@ -29,6 +29,9 @@ const getChat = (req, res) => {
     conn.connect( (err) => {
         if(err)
             throw err
+        
+        let messageList = []
+
         let query = `select * from chatroom_message where receiver_id='${receiver_id}' and sender_id='${sender_id}'`
         conn.query(query, (err, result, fields) => {
             if(err){
@@ -38,7 +41,6 @@ const getChat = (req, res) => {
                     }
                 ))
             }
-            let messageList = []
             for(let message of result){
                 messageList.push({
                     message_id: message.message_id, 
@@ -47,10 +49,8 @@ const getChat = (req, res) => {
                     message_date: message.message_date
                 })
             }
-            
-            let receiver_nick = ""
 
-            let query2 = `select user_nick from users where user_id='${receiver_id}'`
+            let query2 = `select * from chatroom_message where receiver_id='${sender_id}' and sender_id='${receiver_id}'`
             conn.query(query2, (err, result, fields) => {
                 if(err){
                     return res.status(401).send(JSON.stringify(
@@ -59,24 +59,45 @@ const getChat = (req, res) => {
                         }
                     ))
                 }
-                if(result.length){
-                    receiver_nick = result[0].user_nick
+                for(let message of result){
+                    messageList.push({
+                        message_id: message.message_id, 
+                        incoming: true, 
+                        message_content: message.message_content, 
+                        message_date: message.message_date
+                    })
                 }
+                
+                let receiver_nick = ""
+                
+                let query3 = `select user_nick from users where user_id='${receiver_id}'`
+                conn.query(query3, (err, result, fields) => {
+                    if(err){
+                        return res.status(401).send(JSON.stringify(
+                            {
+                                status: "INVALID_USER"
+                            }
+                            ))
+                    }
+                    if(result.length){
+                        receiver_nick = result[0].user_nick
+                    }
 
+                    messageList.sort(function(a,b){
+                        return new Date(a.message_date) - new Date(b.message_date);
+                    });
+                        
+                    return res.status(200).send(JSON.stringify(
+                        {
+                            status: "OK",
+                            receiver_nick: receiver_nick,
+                            messages: messageList
+                        }
+                    ))
+                })
+                    
             })
-
-            return res.status(200).send(JSON.stringify(
-                {
-                    status: "OK",
-                    receiver_nick: receiver_nick,
-                    messages: messageList
-                }
-            ))
-            
         })
     })
-
-
-
 }
 module.exports = { getChat }
