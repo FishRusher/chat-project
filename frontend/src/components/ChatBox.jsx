@@ -16,7 +16,7 @@ const ChatBox = () => {
     function sendMessage() {
         if (messageInput.current === null) return
         const message = messageInput.current.value
-        if (message === "" || message === null) return
+        if (message === "" || message === null || message.trim().length === 0) return
 
         const jwt = localStorage.getItem("jwt")
         const data = {}
@@ -40,6 +40,7 @@ const ChatBox = () => {
                 }
                 if (response.status === "OK") {
                     getChat()
+                    messageInput.current.value = ""
                 }
             })
             .catch(e => {
@@ -81,10 +82,21 @@ const ChatBox = () => {
     useEffect(() => {
         getChat()
 
-        const int = setInterval(getChat, 2000)
+        const int = setInterval(getChat, 5000)
+
+        function handleEnter(e) {
+            if (e.code === "Enter") {
+                e.preventDefault()
+                sendMessage();
+            }
+        }
+
+        const input = messageInput.current;
+        input.addEventListener("keydown", handleEnter)
 
         return () => {
             clearInterval(int)
+            input.removeEventListener("keydown", handleEnter)
         }
     }, [])
 
