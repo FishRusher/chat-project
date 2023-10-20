@@ -10,6 +10,7 @@ const { getUsers } = require("./routes/getUsers");
 const { register } = require("./routes/register");
 const { sendMessage } = require("./routes/sendMessage");
 const { getChat } = require("./routes/getChat");
+const { deleteMessage } = require("./routes/deleteMessage");
 
 
 const app = express()
@@ -29,6 +30,7 @@ app.post('/backend/getUsers', getUsers);
 app.post('/backend/register', register);
 app.post('/backend/sendMessage', sendMessage);
 app.post('/backend/getChat', getChat);
+app.delete('/backend/deleteMessage', deleteMessage)
 
 const port = process.env.PORT;
 
