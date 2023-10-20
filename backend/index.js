@@ -4,10 +4,13 @@ const jwt = require("jsonwebtoken");
 const dotenv = require('dotenv');
 const MD5 = require("crypto-js/md5");
 const cors = require("cors");
+
 const { login } = require("./routes/login");
 const { getUsers } = require("./routes/getUsers");
 const { register } = require("./routes/register");
 const { sendMessage } = require("./routes/sendMessage");
+const { getChat } = require("./routes/getChat");
+
 
 const app = express()
 
@@ -22,12 +25,10 @@ app.get('/', (req, res) => {
 });
 
 app.post('/backend/login', login);
-
 app.post('/backend/getUsers', getUsers);
-
 app.post('/backend/register', register);
-
 app.post('/backend/sendMessage', sendMessage);
+app.post('/backend/getChat', getChat);
 
 const port = process.env.PORT;
 
