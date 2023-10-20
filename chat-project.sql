@@ -32,7 +32,7 @@ CREATE TABLE `chatroom_message` (
   `sender_id` int(11) NOT NULL,
   `receiver_id` int(11) NOT NULL,
   `message_content` text NOT NULL,
-  `message_date` date NOT NULL
+  `message_date` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf16 COLLATE=utf16_polish_ci;
 
 -- --------------------------------------------------------
