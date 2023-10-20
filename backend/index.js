@@ -6,6 +6,7 @@ const MD5 = require("crypto-js/md5");
 const cors = require("cors");
 const {login} = require("./routes/login");
 const {getUsers} = require("./routes/getUsers");
+const {getChat} = require("./routes/getChat");
 
 const app = express()
 
@@ -22,6 +23,8 @@ app.get('/', (req, res) => {
 app.post('/backend/login', login);
 
 app.post('/backend/getUsers', getUsers);
+
+app.post('/backend/getChat', getChat);
 
 const port = process.env.PORT;
 

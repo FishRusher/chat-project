@@ -28,6 +28,7 @@ const login = (req, res) => {
                 let algorithm = process.env.ALGORITHM;
                 token = jwt.sign(
                     {
+                        "id": result[0].user_id,
                         "nick": nick,
                         "password": password
                     },
