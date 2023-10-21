@@ -98,7 +98,7 @@ const ChatBox = () => {
             clearInterval(int)
             input.removeEventListener("keydown", handleEnter)
         }
-    }, [])
+    }, [receiver_id])
 
     return (
         <Box sx={{ p: 2, display: "flex", flexDirection: "column", gap: 2, height: "100%" }}>
