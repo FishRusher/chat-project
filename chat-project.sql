@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Paź 12, 2023 at 08:45 AM
+-- Generation Time: Paź 25, 2023 at 09:40 AM
 -- Wersja serwera: 10.4.28-MariaDB
 -- Wersja PHP: 8.2.4
 
@@ -32,8 +32,21 @@ CREATE TABLE `chatroom_message` (
   `sender_id` int(11) NOT NULL,
   `receiver_id` int(11) NOT NULL,
   `message_content` text NOT NULL,
-  `message_date` date NOT NULL DEFAULT current_timestamp()
+  `message_date` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf16 COLLATE=utf16_polish_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `forwarded_message`
+--
+
+CREATE TABLE `forwarded_message` (
+  `message_id` int(11) NOT NULL,
+  `sender_id` int(11) NOT NULL,
+  `receiver_id` int(11) NOT NULL,
+  `message_date` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -58,6 +71,12 @@ ALTER TABLE `chatroom_message`
   ADD PRIMARY KEY (`message_id`);
 
 --
+-- Indeksy dla tabeli `forwarded_message`
+--
+ALTER TABLE `forwarded_message`
+  ADD PRIMARY KEY (`message_id`);
+
+--
 -- Indeksy dla tabeli `users`
 --
 ALTER TABLE `users`
@@ -71,6 +90,12 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `chatroom_message`
 --
 ALTER TABLE `chatroom_message`
+  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `forwarded_message`
+--
+ALTER TABLE `forwarded_message`
   MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
