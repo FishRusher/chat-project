@@ -14,7 +14,7 @@ const MessageSettings = ({ incoming, message_id }) => {
             "message_id": message_id
         }
 
-        fetch(`${process.env.REACT_APP_BACKEND_ADDRESS}/getUsers`, {
+        fetch(`${process.env.REACT_APP_BACKEND_ADDRESS}/deleteMessage`, {
             method: "DELETE",
             headers: {
                 'Accept': 'application/json',
