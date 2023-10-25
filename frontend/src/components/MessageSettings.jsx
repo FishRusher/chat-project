@@ -3,7 +3,7 @@ import { Box, IconButton } from '@mui/material'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
-const MessageSettings = ({ incoming, message_id }) => {
+const MessageSettings = ({ incoming, message_id, openForwardPanel }) => {
     const navigate = useNavigate()
 
     function deleteMessage() {
@@ -14,7 +14,7 @@ const MessageSettings = ({ incoming, message_id }) => {
             "message_id": message_id
         }
 
-        fetch(`${process.env.REACT_APP_BACKEND_ADDRESS}/getUsers`, {
+        fetch(`${process.env.REACT_APP_BACKEND_ADDRESS}/deleteMessage`, {
             method: "DELETE",
             headers: {
                 'Accept': 'application/json',
@@ -39,7 +39,7 @@ const MessageSettings = ({ incoming, message_id }) => {
     return (
         <Box sx={{ position: 'absolute', top: 0, left: incoming ? "100%" : "unset", right: incoming ? "unset" : "100%" }}>
             {!incoming && <IconButton children={<Delete fontSize='small'></Delete>} onClick={deleteMessage}></IconButton>}
-            {incoming && <IconButton children={<ForwardToInbox fontSize='small'></ForwardToInbox>}></IconButton>}
+            {incoming && <IconButton children={<ForwardToInbox fontSize='small'></ForwardToInbox>} onClick={() => openForwardPanel(message_id)}></IconButton>}
         </Box>
     )
 }
