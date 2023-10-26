@@ -45,7 +45,6 @@ const forwardMessage = (req, res) => {
                     query2 += `(${message_id}, ${sender_id}, ${receiver_id}),`
                 }
                 query2 = query2.slice(0, -1)
-                console.log(query2)
                 conn.query(query2, (err, result) => {
                     if (err) {
                         conn.end()
