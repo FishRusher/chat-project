@@ -30,7 +30,7 @@ const ChatMessage = ({ message, openForwardPanel, getChat }) => {
             <Box sx={{ maxWidth: "80%", m: 1 }}>
                 <Box sx={{ color: "#909090", textAlign: message.incoming ? "left" : "right" }}>{getStringDate(message.message_date)}</Box>
                 <Box sx={getStyles()}>
-                    {(!message.forwarded) && <MessageSettings getChat={getChat} incoming={message.incoming} message_id={message.message_id} openForwardPanel={openForwardPanel}></MessageSettings>}
+                    {(!message.forwarded) && <MessageSettings getChat={getChat} incoming={message.incoming} message_id={message.message_id} openForwardPanel={() => openForwardPanel(message.message_id, message.message_content)}></MessageSettings>}
                     <Box>
                         {message.message_content}
                     </Box>

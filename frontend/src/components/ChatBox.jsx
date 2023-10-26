@@ -15,14 +15,17 @@ const ChatBox = () => {
 
     const [modalOpen, setModalOpen] = useState(false)
     const [forwardMessageId, setForwardMessageId] = useState(-1)
+    const [forwardMessageContent, setForwardMessageContent] = useState("")
     const closeModal = () => {
         setModalOpen(false)
         setForwardMessageId(-1)
+        setForwardMessageContent("")
     }
 
-    const openForwardPanel = (message_id) => {
+    const openForwardPanel = (message_id, message_content) => {
         setModalOpen(true)
         setForwardMessageId(message_id)
+        setForwardMessageContent(message_content)
     }
 
     const messageInput = useRef(null)
@@ -136,8 +139,8 @@ const ChatBox = () => {
             </Box>
 
             <Modal open={modalOpen} onClose={closeModal}>
-                <Box sx={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)" }}>
-                    <ForwardPanel closeModal={closeModal} message_id={forwardMessageId} users={users.filter(e => parseInt(e.user_id) !== parseInt(receiver_id))}></ForwardPanel>
+                <Box sx={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: "35%", overflow: "hidden" }}>
+                    <ForwardPanel closeModal={closeModal} message_id={forwardMessageId} message_content={forwardMessageContent} users={users.filter(e => parseInt(e.user_id) !== parseInt(receiver_id))}></ForwardPanel>
                 </Box>
             </Modal>
         </Box >
