@@ -30,8 +30,7 @@ const forwardMessage = (req, res) => {
     conn.connect((err) => {
         if (err)
             throw err
-        
-        let query = `select * from chatroom_message where message_id='${message_id}'`
+        let query2 = `select * from chatroom_message where message_id='${message_id}'`
         conn.query(query2, (err, result, fields) => {
             if (err) {
                 conn.end()
@@ -41,23 +40,28 @@ const forwardMessage = (req, res) => {
                     }))
             }
             if(result){
+                let query2 = `insert into forwarded_message(message_id, sender_id, receiver_id) values `
                 for(let receiver_id of receiver_ids){
-                    let query2 = `insert into forwarded_message(message_id, sender_id, receiver_id) values (${message_id}, ${sender_id}, ${receiver_id})`
-                    conn.query(query2, (err) => {
-                        if (err) {
-                            conn.end()
-                            return res.status(500).send(JSON.stringify(
-                                {
-                                    status: "ERROR",
-                                }))
-                        }
-                    })
+                    query2 += `(${message_id}, ${sender_id}, ${receiver_id}),`
                 }
-                conn.end()
-                return res.status(200).send(JSON.stringify(
-                    {
-                        status: "OK",
-                    }))
+                query2 = query2.slice(0, -1)
+                console.log(query2)
+                conn.query(query2, (err, result) => {
+                    if (err) {
+                        conn.end()
+                        return res.status(500).send(JSON.stringify(
+                            {
+                                status: "ERROR",
+                            }))
+                    }
+                    if(result){
+                        conn.end()
+                        return res.status(200).send(JSON.stringify(
+                            {
+                                status: "OK",
+                            }))
+                    }
+                })
             }
             else{
                 conn.end()
