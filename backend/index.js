@@ -9,6 +9,7 @@ const { login } = require("./routes/login");
 const { getUsers } = require("./routes/getUsers");
 const { register } = require("./routes/register");
 const { sendMessage } = require("./routes/sendMessage");
+const { sendForwardedMessage } = require("./routes/sendForwardedMessage");
 const { getChat } = require("./routes/getChat");
 
 
@@ -28,6 +29,7 @@ app.post('/backend/login', login);
 app.post('/backend/getUsers', getUsers);
 app.post('/backend/register', register);
 app.post('/backend/sendMessage', sendMessage);
+app.post('/backend/sendForwardedMessage', sendForwardedMessage);
 app.post('/backend/getChat', getChat);
 
 const port = process.env.PORT;
