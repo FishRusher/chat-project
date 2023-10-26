@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Avatar, Box, Button, Modal, Paper, TextField } from "@mui/material"
-import { useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useOutletContext, useParams } from "react-router-dom"
 import { randomColor, getInitials } from '../functions'
 import ChatMessage from './ChatMessage'
 import { Send } from '@mui/icons-material'
@@ -9,6 +9,7 @@ import ForwardPanel from './ForwardPanel'
 const ChatBox = () => {
     const receiver_id = useParams()["user_id"]
     const [chat, setChat] = useState([])
+    const users = useOutletContext()
     const [receiverNick, setReceiverNick] = useState("???")
     const navigate = useNavigate()
 
@@ -123,7 +124,7 @@ const ChatBox = () => {
             </Paper>
             <Box sx={{ p: 2, gap: 2, flexGrow: 1, display: "flex", overflow: "hidden", flexDirection: "column" }}>
                 <Box sx={{ flexGrow: 1, flexBasis: 0, overflow: "scroll" }}>
-                    {chat.map(m => <ChatMessage key={m.message_id} message={m} openForwardPanel={openForwardPanel}></ChatMessage>)}
+                    {chat.map(m => <ChatMessage key={m.message_id} message={m} openForwardPanel={openForwardPanel} getChat={getChat}></ChatMessage>)}
                     {chat.length === 0 && <Box sx={{ textAlign: 'center', paddingTop: 3, color: '#909090' }}>Konwersacja jeszcze nie rozpoczęta</Box>}
                 </Box>
                 <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -136,7 +137,7 @@ const ChatBox = () => {
 
             <Modal open={modalOpen} onClose={closeModal}>
                 <Box sx={{position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)"}}>
-                    <ForwardPanel message_id={forwardMessageId}></ForwardPanel>
+                    <ForwardPanel closeModal={closeModal} message_id={forwardMessageId} users={users.filter(e => parseInt(e.user_id) !== parseInt(receiver_id))}></ForwardPanel>
                 </Box>
             </Modal>
         </Box >

@@ -3,7 +3,7 @@ import { Box, IconButton } from '@mui/material'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
-const MessageSettings = ({ incoming, message_id, openForwardPanel }) => {
+const MessageSettings = ({ incoming, message_id, openForwardPanel, getChat }) => {
     const navigate = useNavigate()
 
     function deleteMessage() {
@@ -29,6 +29,9 @@ const MessageSettings = ({ incoming, message_id, openForwardPanel }) => {
                 }
                 if (response.status !== "OK") {
                     alert(response.status)
+                }
+                else {
+                    getChat()
                 }
             })
             .catch(e => {
