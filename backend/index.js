@@ -9,6 +9,7 @@ const { login } = require("./routes/login");
 const { getUsers } = require("./routes/getUsers");
 const { register } = require("./routes/register");
 const { sendMessage } = require("./routes/sendMessage");
+const { forwardMessage } = require("./routes/forwardMessage");
 const { getChat } = require("./routes/getChat");
 const { deleteMessage } = require("./routes/deleteMessage");
 
@@ -29,6 +30,7 @@ app.post('/backend/login', login);
 app.post('/backend/getUsers', getUsers);
 app.post('/backend/register', register);
 app.post('/backend/sendMessage', sendMessage);
+app.post('/backend/forwardMessage', forwardMessage);
 app.post('/backend/getChat', getChat);
 app.delete('/backend/deleteMessage', deleteMessage)
 

@@ -46,6 +46,7 @@ const getChat = (req, res) => {
                 messageList.push({
                     message_id: message.message_id,
                     incoming: false,
+                    forwarded: false,
                     message_content: message.message_content,
                     message_date: message.message_date
                 })
@@ -65,6 +66,7 @@ const getChat = (req, res) => {
                     messageList.push({
                         message_id: message.message_id,
                         incoming: true,
+                        forwarded: false,
                         message_content: message.message_content,
                         message_date: message.message_date
                     })
@@ -72,7 +74,7 @@ const getChat = (req, res) => {
 
                 let receiver_nick = ""
 
-                let query3 = `select user_nick from users where user_id='${receiver_id}'`
+                let query3 = `select forwarded_message.message_id, forwarded_message.sender_id, forwarded_message.receiver_id, forwarded_message.message_date, chatroom_message.message_content from forwarded_message join chatroom_message on forwarded_message.message_id=chatroom_message.message_id where forwarded_message.receiver_id='${sender_id}' and forwarded_message.sender_id='${receiver_id}'`
                 conn.query(query3, (err, result, fields) => {
                     if (err) {
                         conn.end();
@@ -82,22 +84,66 @@ const getChat = (req, res) => {
                             }
                         ))
                     }
-                    if (result.length) {
-                        receiver_nick = result[0].user_nick
+
+                    for (let message of result) {
+                        messageList.push({
+                            message_id: message.message_id,
+                            incoming: true,
+                            forwarded: true,
+                            message_content: message.message_content,
+                            message_date: message.message_date
+                        })
                     }
 
-                    messageList.sort(function (a, b) {
-                        return new Date(a.message_date) - new Date(b.message_date);
-                    });
-
-                    conn.end();
-                    return res.status(200).send(JSON.stringify(
-                        {
-                            status: "OK",
-                            receiver_nick: receiver_nick,
-                            messages: messageList
+                    let query4 = `select forwarded_message.message_id, forwarded_message.sender_id, forwarded_message.receiver_id, forwarded_message.message_date, chatroom_message.message_content from forwarded_message join chatroom_message on forwarded_message.message_id=chatroom_message.message_id where forwarded_message.receiver_id='${receiver_id}' and forwarded_message.sender_id='${sender_id}'`
+                    conn.query(query4, (err, result, fields) => {
+                        if (err) {
+                            conn.end();
+                            return res.status(401).send(JSON.stringify(
+                                {
+                                    status: "INVALID_USER"
+                                }
+                            ))
                         }
-                    ))
+
+                        for (let message of result) {
+                            messageList.push({
+                                message_id: message.message_id,
+                                incoming: false,
+                                forwarded: true,
+                                message_content: message.message_content,
+                                message_date: message.message_date
+                            })
+                        }
+
+                        let query5 = `select user_nick from users where user_id='${receiver_id}'`
+                        conn.query(query5, (err, result, fields) => {
+                            if (err) {
+                                conn.end();
+                                return res.status(401).send(JSON.stringify(
+                                    {
+                                        status: "INVALID_USER"
+                                    }
+                                ))
+                            }
+                            if (result.length) {
+                                receiver_nick = result[0].user_nick
+                            }
+        
+                            messageList.sort(function (a, b) {
+                                return new Date(a.message_date) - new Date(b.message_date);
+                            });
+        
+                            conn.end();
+                            return res.status(200).send(JSON.stringify(
+                                {
+                                    status: "OK",
+                                    receiver_nick: receiver_nick,
+                                    messages: messageList
+                                }
+                            ))
+                        })
+                    })
                 })
 
             })
