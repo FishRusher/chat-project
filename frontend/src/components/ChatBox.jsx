@@ -136,7 +136,7 @@ const ChatBox = () => {
             </Box>
 
             <Modal open={modalOpen} onClose={closeModal}>
-                <Box sx={{position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)"}}>
+                <Box sx={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)" }}>
                     <ForwardPanel closeModal={closeModal} message_id={forwardMessageId} users={users.filter(e => parseInt(e.user_id) !== parseInt(receiver_id))}></ForwardPanel>
                 </Box>
             </Modal>
