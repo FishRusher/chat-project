@@ -13,6 +13,7 @@ export function getStringDate(date) {
 }
 
 export function getInitials(nick) {
+    nick = nick.replace(" ", "")
     let letters = [...nick]
     let n = letters.length
     return letters[0] + letters[parseInt(n / 2)]
