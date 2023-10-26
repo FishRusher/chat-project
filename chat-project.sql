@@ -39,16 +39,6 @@ CREATE TABLE `chatroom_message` (
 -- Dumping data for table `chatroom_message`
 --
 
-INSERT INTO `chatroom_message` (`message_id`, `sender_id`, `receiver_id`, `message_content`, `message_date`) VALUES
-(1, 1, 2, 'asd', '2023-10-25 08:26:22'),
-(2, 2, 1, 'soiema', '2023-10-25 09:58:58'),
-(3, 1, 2, 'test', '2023-10-25 10:09:18'),
-(4, 2, 1, 'soiema', '2023-10-25 10:09:22'),
-(5, 2, 1, 'soiema', '2023-10-25 10:09:22'),
-(6, 2, 1, 'soiema', '2023-10-25 10:09:23'),
-(7, 2, 1, 'soiema', '2023-10-25 10:09:23'),
-(8, 2, 1, 'soiema', '2023-10-25 10:09:23');
-
 -- --------------------------------------------------------
 
 --
@@ -78,10 +68,6 @@ CREATE TABLE `users` (
 --
 -- Dumping data for table `users`
 --
-
-INSERT INTO `users` (`user_id`, `user_nick`, `user_password`) VALUES
-(1, 'test1', '202cb962ac59075b964b07152d234b70'),
-(2, 'test2', '202cb962ac59075b964b07152d234b70');
 
 --
 -- Indeksy dla zrzutów tabel
