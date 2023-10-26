@@ -1,7 +1,7 @@
 const mysql = require("mysql");
 const jwt = require("jsonwebtoken");
 
-const sendForwardedMessage = (req, res) => {
+const forwardMessage = (req, res) => {
     let jwtSecretKey = process.env.JWT_SECRET_KEY
     let token = req.body.jwt
     let message_id = req.body.message_id
@@ -49,4 +49,4 @@ const sendForwardedMessage = (req, res) => {
             }))
     })
 }
-module.exports = { sendForwardedMessage }
+module.exports = { forwardMessage }
