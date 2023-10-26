@@ -7,6 +7,8 @@ import { Logout } from '@mui/icons-material'
 const MainPage = () => {
     const navigate = useNavigate()
 
+    const [users, setUsers] = useState([])
+
     useEffect(() => {
         if (localStorage.getItem("jwt") === null) {
             navigate("login")
@@ -18,11 +20,40 @@ const MainPage = () => {
         navigate("/login")
     }
 
+    useEffect(() => {
+        function getUsers() {
+            const jwt = localStorage.getItem("jwt")
+            const data = {}
+            data["jwt"] = jwt
+
+            fetch(`${process.env.REACT_APP_BACKEND_ADDRESS}/getUsers`, {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }).then(response => response.json())
+                .then(response => {
+                    if (response.status === "TOKEN_EXPIRED") {
+                        localStorage.removeItem("jwt")
+                        navigate("/login")
+                    }
+                    setUsers(response.users)
+                })
+                .catch(e => {
+
+                })
+        }
+
+        getUsers()
+    }, [])
+
     return (
         <Box sx={{ display: "flex", height: "100%", gap: 2, p: 2 }}>
             <Box sx={{ height: "100%", flexGrow: 1, flexBasis: 0, display: "flex", flexDirection: "column", gap: 2 }}>
                 <Paper elevation={7} sx={{ flexGrow: 1, flexBasis: 0, overflow: "hidden" }}>
-                    <UsersList></UsersList>
+                    <UsersList users={users}></UsersList>
                 </Paper>
                 <Paper elevation={7} sx={{ p: 2 }}>
                     <Button variant='contained' color='error' endIcon={<Logout/>} onClick={logOut}>Wyloguj</Button>
@@ -30,7 +61,7 @@ const MainPage = () => {
             </Box>
 
             <Paper elevation={7} sx={{ height: "100%", flexGrow: 3, flexBasis: 0 }}>
-                <Outlet></Outlet>
+                <Outlet context={users}></Outlet>
             </Paper>
         </Box>
     )
