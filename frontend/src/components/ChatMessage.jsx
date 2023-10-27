@@ -33,7 +33,7 @@ const ChatMessage = ({ message, openForwardPanel, getChat }) => {
                     {(!message.forwarded) && <MessageSettings getChat={getChat} incoming={message.incoming} message_id={message.message_id} openForwardPanel={() => openForwardPanel(message.message_id, message.message_content)}></MessageSettings>}
                     
                     <Box>
-                        {message.forwarded && <Box sx={{display: "flex", marginBottom: 2, gap: 1, alignItems: "center"}}><Box sx={{fontStyle: "italic"}}>{message.original_sender_nick}</Box> <Box>napisał:</Box></Box>}
+                        {message.forwarded && <><Box sx={{display: "flex", gap: 1, alignItems: "center"}}><Box sx={{fontStyle: "italic", fontWeight: 900}}>{message.original_sender_nick}</Box> <Box>napisał:</Box></Box><Divider sx={{m: 1}}></Divider></>}
                         {message.message_content}
                     </Box>
                 </Box>
