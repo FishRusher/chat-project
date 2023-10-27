@@ -1,5 +1,6 @@
 const mysql = require("mysql");
 const jwt = require("jsonwebtoken");
+const MD5 = require("crypto-js/md5");
 
 const sendMessage = (req, res) => {
     let jwtSecretKey = process.env.JWT_SECRET_KEY
@@ -30,18 +31,29 @@ const sendMessage = (req, res) => {
     conn.connect((err) => {
         if (err)
             throw err
-        let query = `insert into chatroom_message(message_id, sender_id, receiver_id, message_content) values ('', ${sender_id}, ${receiver_id}, '${message}')`
-        conn.query(query, (err, result, fields) => {
-            if (err) {
-                return res.status(500).send(JSON.stringify(
+        let query_start = `select * from users where user_nick='${decoded.nick}' and user_password='${MD5(decoded.password).toString()}'`
+        conn.query(query_start, (err, result) => {
+            if (err || !result.length) {
+                conn.end();
+                return res.status(404).send(JSON.stringify(
                     {
-                        status: "ERROR",
-                    }))
+                        status: "INVALID_LOGIN"
+                    }
+                    ))
             }
-            return res.status(200).send(JSON.stringify(
-                {
-                    status: "OK",
-                }))
+            let query = `insert into chatroom_message(message_id, sender_id, receiver_id, message_content) values ('', ${sender_id}, ${receiver_id}, '${message}')`
+            conn.query(query, (err, result, fields) => {
+                if (err) {
+                    return res.status(500).send(JSON.stringify(
+                        {
+                            status: "ERROR",
+                        }))
+                }
+                return res.status(200).send(JSON.stringify(
+                    {
+                        status: "OK",
+                    }))
+            })
         })
     })
 }
