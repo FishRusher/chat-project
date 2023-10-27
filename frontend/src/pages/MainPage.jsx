@@ -8,10 +8,35 @@ const MainPage = () => {
     const navigate = useNavigate()
 
     const [users, setUsers] = useState([])
+    const [nick, setNick] = useState("???")
 
     useEffect(() => {
         if (localStorage.getItem("jwt") === null) {
             navigate("login")
+        }
+        else {
+            const data = {jwt: localStorage.getItem("jwt")}
+
+            fetch(`${process.env.REACT_APP_BACKEND_ADDRESS}/getNick`, {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }).then(response => response.json())
+                .then(response => {
+                    if (response.status === "TOKEN_EXPIRED") {
+                        localStorage.removeItem("jwt")
+                        navigate("/login")
+                    }
+                    if (response.status === "OK") {
+                        setNick(response.nick)
+                    }
+                })
+                .catch(e => {
+                    alert("Błąd")
+                })
         }
     }, [])
 
@@ -55,7 +80,8 @@ const MainPage = () => {
                 <Paper elevation={7} sx={{ flexGrow: 1, flexBasis: 0, overflow: "hidden" }}>
                     <UsersList users={users}></UsersList>
                 </Paper>
-                <Paper elevation={7} sx={{ p: 2 }}>
+                <Paper elevation={7} sx={{ p: 2, display: 'flex', justifyContent: "space-between", alignItems: "center"}}>
+                    <Box sx={{fontWeight: 900, fontSize: 25}}>{nick}</Box>
                     <Button variant='contained' color='error' endIcon={<Logout/>} onClick={logOut}>Wyloguj</Button>
                 </Paper>
             </Box>
