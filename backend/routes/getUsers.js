@@ -10,11 +10,11 @@ const getUsers = (req, res) => {
     try {
         var decoded = jwt.verify(token, jwtSecretKey);
     } catch(err) {
-        // return res.status(401).send(JSON.stringify(
-        //     {
-        //         status: "TOKEN_EXPIRED"
-        //     }
-        // ))
+        return res.status(401).send(JSON.stringify(
+            {
+                status: "TOKEN_EXPIRED"
+            }
+        ))
     }
 
     let nick = decoded.nick
