@@ -1,4 +1,4 @@
-import { Box } from '@mui/material'
+import { Box, Divider } from '@mui/material'
 import { blue, green } from '@mui/material/colors'
 import React from 'react'
 import { getStringDate } from '../functions'
@@ -31,7 +31,9 @@ const ChatMessage = ({ message, openForwardPanel, getChat }) => {
                 <Box sx={{ color: "#909090", textAlign: message.incoming ? "left" : "right" }}>{getStringDate(message.message_date)}</Box>
                 <Box sx={getStyles()}>
                     {(!message.forwarded) && <MessageSettings getChat={getChat} incoming={message.incoming} message_id={message.message_id} openForwardPanel={() => openForwardPanel(message.message_id, message.message_content)}></MessageSettings>}
+                    
                     <Box>
+                        {message.forwarded && <Box sx={{display: "flex", marginBottom: 2, gap: 1, alignItems: "center"}}><Box sx={{fontStyle: "italic"}}>{message.original_sender_nick}</Box> <Box>napisał:</Box></Box>}
                         {message.message_content}
                     </Box>
                 </Box>
