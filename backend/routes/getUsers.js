@@ -1,6 +1,7 @@
 const mysql = require("mysql");
 const jwt = require("jsonwebtoken");
 const dotenv = require('dotenv'); 
+const MD5 = require("crypto-js/md5");
 
 const getUsers = (req, res) => {
     let jwtSecretKey = process.env.JWT_SECRET_KEY
@@ -9,11 +10,11 @@ const getUsers = (req, res) => {
     try {
         var decoded = jwt.verify(token, jwtSecretKey);
     } catch(err) {
-        return res.status(401).send(JSON.stringify(
-            {
-                status: "TOKEN_EXPIRED"
-            }
-        ))
+        // return res.status(401).send(JSON.stringify(
+        //     {
+        //         status: "TOKEN_EXPIRED"
+        //     }
+        // ))
     }
 
     let nick = decoded.nick
@@ -28,20 +29,31 @@ const getUsers = (req, res) => {
     conn.connect( (err) => {
         if(err)
             throw err
-        let query = `select * from users where user_nick!='${nick}'`
-        conn.query(query, (err, result, fields) => {
-            if(err)
-                throw err
-            let usersList = []
-            for(let user of result){
-                usersList.push({"user_id": user.user_id, "user_nick": user.user_nick})
+        let query_start = `select * from users where user_nick='${decoded.nick}' and user_password='${MD5(decoded.password).toString()}'`
+        conn.query(query_start, (err, result) => {
+            if (err || !result.length) {
+                conn.end();
+                return res.status(404).send(JSON.stringify(
+                    {
+                        status: "INVALID_LOGIN"
+                    }
+                    ))
             }
-            return res.status(200).send(JSON.stringify(
-                {
-                    status: "OK",
-                    users: usersList
+            let query = `select * from users where user_nick!='${nick}'`
+            conn.query(query, (err, result, fields) => {
+                if(err)
+                    throw err
+                let usersList = []
+                for(let user of result){
+                    usersList.push({"user_id": user.user_id, "user_nick": user.user_nick})
                 }
-            ))
+                return res.status(200).send(JSON.stringify(
+                    {
+                        status: "OK",
+                        users: usersList
+                    }
+                ))
+            })
         })
     })
 

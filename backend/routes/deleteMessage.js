@@ -1,6 +1,7 @@
 const mysql = require("mysql");
 const jwt = require("jsonwebtoken");
 const dotenv = require('dotenv'); 
+const MD5 = require("crypto-js/md5");
 
 const deleteMessage = (req, res) => {
     let jwtSecretKey = process.env.JWT_SECRET_KEY
@@ -27,29 +28,40 @@ const deleteMessage = (req, res) => {
     conn.connect( (err) => {
         if(err)
             throw err
-        let query = `delete from chatroom_message where message_id='${message_id}'`
-        conn.query(query, (err, result, fields) => {
-            if(err){
+        let query_start = `select * from users where user_nick='${decoded.nick}' and user_password='${MD5(decoded.password).toString()}'`
+        conn.query(query_start, (err, result) => {
+            if (err || !result.length) {
+                conn.end();
                 return res.status(404).send(JSON.stringify(
                     {
-                        status: "INVALID_MESSAGE"
+                        status: "INVALID_LOGIN"
                     }
                 ))
             }
-            if(result){
-                return res.status(200).send(JSON.stringify(
-                    {
-                        status: "OK"
-                    }
-                ))
-            }
-            else{
-                return res.status(500).send(JSON.stringify(
-                    {
-                        status: "ERROR"
-                    }
-                ))
-            }
+            let query = `delete from chatroom_message where message_id='${message_id}'`
+            conn.query(query, (err, result, fields) => {
+                if(err){
+                    return res.status(404).send(JSON.stringify(
+                        {
+                            status: "INVALID_MESSAGE"
+                        }
+                    ))
+                }
+                if(result){
+                    return res.status(200).send(JSON.stringify(
+                        {
+                            status: "OK"
+                        }
+                    ))
+                }
+                else{
+                    return res.status(500).send(JSON.stringify(
+                        {
+                            status: "ERROR"
+                        }
+                    ))
+                }
+            })
         })
     })
 
