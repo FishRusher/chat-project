@@ -51,7 +51,7 @@ const ChatBox = () => {
             body: JSON.stringify(data)
         }).then(response => response.json())
             .then(response => {
-                if (response.status === "TOKEN_EXPIRED") {
+                if (response.status === "TOKEN_EXPIRED" || response.status === "INVALID_LOGIN") {
                     localStorage.removeItem("jwt")
                     navigate("/login")
                 }
@@ -80,7 +80,7 @@ const ChatBox = () => {
             body: JSON.stringify(data)
         }).then(response => response.json())
             .then(response => {
-                if (response.status === "TOKEN_EXPIRED") {
+                if (response.status === "TOKEN_EXPIRED" || response.status === "INVALID_LOGIN") {
                     localStorage.removeItem("jwt")
                     navigate("/login")
                 }

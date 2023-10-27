@@ -1,8 +1,5 @@
 const express = require("express");
-const mysql = require("mysql");
-const jwt = require("jsonwebtoken");
 const dotenv = require('dotenv');
-const MD5 = require("crypto-js/md5");
 const cors = require("cors");
 
 const { login } = require("./routes/login");
@@ -12,6 +9,7 @@ const { sendMessage } = require("./routes/sendMessage");
 const { forwardMessage } = require("./routes/forwardMessage");
 const { getChat } = require("./routes/getChat");
 const { deleteMessage } = require("./routes/deleteMessage");
+const { getNick } = require("./routes/getNick");
 
 
 const app = express()
@@ -32,6 +30,7 @@ app.post('/backend/register', register);
 app.post('/backend/sendMessage', sendMessage);
 app.post('/backend/forwardMessage', forwardMessage);
 app.post('/backend/getChat', getChat);
+app.post('/backend/getNick', getNick);
 app.delete('/backend/deleteMessage', deleteMessage)
 
 const port = process.env.PORT;

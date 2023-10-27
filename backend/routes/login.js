@@ -33,7 +33,6 @@ const login = (req, res) => {
                         "id": result[0].user_id,
                         "nick": nick,
                         "password": password,
-                        "id": result[0].user_id
                     },
                     jwtSecretKey,
                     {

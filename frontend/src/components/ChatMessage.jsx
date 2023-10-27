@@ -13,7 +13,7 @@ const ChatMessage = ({ message, openForwardPanel, getChat }) => {
             position: "relative"
         }
         if (message.forwarded) {
-            styles = { ...styles, backgroundColor: "#DEE1E3", borderLeft: "3px solid #84929c" }
+            styles = { ...styles, backgroundColor: "#DEE1E388", borderLeft: "3px solid #84929c88" }
         }
         else {
             styles = {
