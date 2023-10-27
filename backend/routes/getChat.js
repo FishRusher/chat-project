@@ -59,6 +59,7 @@ const getChat = (req, res) => {
                         message_id: message.message_id,
                         incoming: false,
                         forwarded: false,
+                        original_sender_nick: "",
                         message_content: message.message_content,
                         message_date: message.message_date
                     })
@@ -79,6 +80,7 @@ const getChat = (req, res) => {
                             message_id: message.message_id,
                             incoming: true,
                             forwarded: false,
+                            original_sender_nick: "",
                             message_content: message.message_content,
                             message_date: message.message_date
                         })
@@ -86,7 +88,7 @@ const getChat = (req, res) => {
 
                     let receiver_nick = ""
 
-                    let query3 = `select forwarded_message.message_id, forwarded_message.sender_id, forwarded_message.receiver_id, forwarded_message.message_date, chatroom_message.message_content from forwarded_message join chatroom_message on forwarded_message.message_id=chatroom_message.message_id where forwarded_message.receiver_id='${sender_id}' and forwarded_message.sender_id='${receiver_id}'`
+                    let query3 = `select forwarded_message.message_id, forwarded_message.sender_id, forwarded_message.receiver_id, forwarded_message.message_date, chatroom_message.message_content, users.user_nick from forwarded_message join chatroom_message on forwarded_message.message_id=chatroom_message.message_id join users on chatroom_message.sender_id=users.user_id where forwarded_message.receiver_id='${sender_id}' and forwarded_message.sender_id='${receiver_id}'`
                     conn.query(query3, (err, result, fields) => {
                         if (err) {
                             conn.end();
@@ -102,12 +104,13 @@ const getChat = (req, res) => {
                                 message_id: message.message_id,
                                 incoming: true,
                                 forwarded: true,
+                                original_sender_nick: message.user_nick,
                                 message_content: message.message_content,
                                 message_date: message.message_date
                             })
                         }
 
-                        let query4 = `select forwarded_message.message_id, forwarded_message.sender_id, forwarded_message.receiver_id, forwarded_message.message_date, chatroom_message.message_content from forwarded_message join chatroom_message on forwarded_message.message_id=chatroom_message.message_id where forwarded_message.receiver_id='${receiver_id}' and forwarded_message.sender_id='${sender_id}'`
+                        let query4 = `select forwarded_message.message_id, forwarded_message.sender_id, forwarded_message.receiver_id, forwarded_message.message_date, chatroom_message.message_content, users.user_nick from forwarded_message join chatroom_message on forwarded_message.message_id=chatroom_message.message_id join users on chatroom_message.sender_id=users.user_id where forwarded_message.receiver_id='${receiver_id}' and forwarded_message.sender_id='${sender_id}'`
                         conn.query(query4, (err, result, fields) => {
                             if (err) {
                                 conn.end();
@@ -123,6 +126,7 @@ const getChat = (req, res) => {
                                     message_id: message.message_id,
                                     incoming: false,
                                     forwarded: true,
+                                    original_sender_nick: message.user_nick,
                                     message_content: message.message_content,
                                     message_date: message.message_date
                                 })
@@ -157,7 +161,6 @@ const getChat = (req, res) => {
                             })
                         })
                     })
-
                 })
             })
         })
