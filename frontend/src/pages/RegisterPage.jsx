@@ -1,13 +1,15 @@
 import React, { useRef } from 'react'
 import { Box, TextField, Paper, Button } from "@mui/material"
 import { Link, useNavigate } from "react-router-dom"
-
+import AlertLogger from '../components/AlertLogger'
 
 const RegisterPage = () => {
     let nick = useRef(null)
     let pass1 = useRef(null)
     let pass2 = useRef(null)
     const navigate = useNavigate()
+
+    let alertLoggerRef = useRef(null)
 
     function register() {
         if (nick.current === null) return
@@ -39,15 +41,21 @@ const RegisterPage = () => {
                         navigate("/login")
                     }
                     else {
-                        alert("BŁAD REJESTRACJI")
+                        if (alertLoggerRef.current !== null) {
+                            alertLoggerRef.current.addAlert({ severity: "error", content: "Błąd rejestracji" })
+                        }
                     }
                 }
                 catch (e) {
-                    alert("Błąd danych")
+                    if (alertLoggerRef.current !== null) {
+                        alertLoggerRef.current.addAlert({ severity: "error", content: "Błąd danych" })
+                    }
                 }
             })
             .catch(error => {
-                alert("Błąd")
+                if (alertLoggerRef.current !== null) {
+                    alertLoggerRef.current.addAlert({ severity: "error", content: "Błąd" })
+                }
             })
     }
 
@@ -71,6 +79,8 @@ const RegisterPage = () => {
 
                 <Box sx={{ marginTop: 2 }}>Masz już konto? <Link to="/login">Zaloguj się</Link></Box>
             </Paper>
+
+            <AlertLogger ref={alertLoggerRef}></AlertLogger>
         </Box>
     )
 }

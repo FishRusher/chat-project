@@ -1,8 +1,11 @@
 import React, { useRef } from 'react'
 import { Box, Button, Paper, TextField } from "@mui/material"
 import { Link, useNavigate } from "react-router-dom"
+import AlertLogger from '../components/AlertLogger'
 
 const LoginPage = () => {
+    let alertLoggerRef = useRef(null)
+
     let nick = useRef(null)
     let pass = useRef(null)
     let navigate = useNavigate()
@@ -33,15 +36,21 @@ const LoginPage = () => {
                         navigate("/")
                     }
                     else {
-                        alert("Niepoprawne dane logowania")
+                        if (alertLoggerRef.current !== null) {
+                            alertLoggerRef.current.addAlert({ severity: "info", content: "Niepoprawne dane logowania" })
+                        }
                     }
                 }
                 catch (e) {
-                    alert("Błąd danych")
+                    if (alertLoggerRef.current !== null) {
+                        alertLoggerRef.current.addAlert({ severity: "error", content: "Błąd danych" })
+                    }
                 }
             })
             .catch(error => {
-                alert("Błąd")
+                if (alertLoggerRef.current !== null) {
+                    alertLoggerRef.current.addAlert({ severity: "error", content: "Błąd" })
+                }
             })
     }
 
@@ -64,6 +73,8 @@ const LoginPage = () => {
 
                 <Box sx={{ marginTop: 2 }}>Nie masz konta? <Link to="/register">Zarejestruj się</Link></Box>
             </Paper>
+
+            <AlertLogger ref={alertLoggerRef}></AlertLogger>
         </Box>
     )
 }
