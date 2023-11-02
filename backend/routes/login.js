@@ -1,7 +1,6 @@
 const MD5 = require("crypto-js/md5");
 const mysql = require("mysql");
 const jwt = require("jsonwebtoken");
-const dotenv = require('dotenv'); 
 
 const login = (req, res) => {
     let nick = req.body.user_nick

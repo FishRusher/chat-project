@@ -33,7 +33,7 @@ const LoginPage = () => {
                         navigate("/")
                     }
                     else {
-                        // to ADD
+                        alert("Niepoprawne dane logowania")
                     }
                 }
                 catch (e) {
