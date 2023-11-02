@@ -27,18 +27,32 @@ const getChat = (req, res) => {
     })
 
     conn.connect((err) => {
-        if (err)
-            throw err
+        if(err){
+            conn.end();
+            return res.status(500).send(JSON.stringify(
+                {
+                    status: "ERROR"
+                }
+            ))
+        }
 
         let query_start = `select * from users where user_nick='${decoded.nick}' and user_password='${MD5(decoded.password).toString()}'`
         conn.query(query_start, (err, result) => {
-            if (err || !result.length) {
+            if(err){
                 conn.end();
-                return res.status(404).send(JSON.stringify(
+                return res.status(500).send(JSON.stringify(
+                    {
+                        status: "ERROR"
+                    }
+                ))
+            }
+            if (!result.length) {
+                conn.end();
+                return res.status(401).send(JSON.stringify(
                     {
                         status: "INVALID_LOGIN"
                     }
-                    ))
+                ))
             }
 
             let messageList = []
@@ -47,7 +61,7 @@ const getChat = (req, res) => {
             conn.query(query, (err, result, fields) => {
                 if (err) {
                     conn.end();
-                    return res.status(401).send(JSON.stringify(
+                    return res.status(500).send(JSON.stringify(
                         {
                             status: "INVALID_USER"
                         }
@@ -68,7 +82,7 @@ const getChat = (req, res) => {
                 conn.query(query2, (err, result, fields) => {
                     if (err) {
                         conn.end();
-                        return res.status(401).send(JSON.stringify(
+                        return res.status(500).send(JSON.stringify(
                             {
                                 status: "INVALID_USER"
                             }
@@ -91,7 +105,7 @@ const getChat = (req, res) => {
                     conn.query(query3, (err, result, fields) => {
                         if (err) {
                             conn.end();
-                            return res.status(401).send(JSON.stringify(
+                            return res.status(500).send(JSON.stringify(
                                 {
                                     status: "INVALID_USER"
                                 }
@@ -113,7 +127,7 @@ const getChat = (req, res) => {
                         conn.query(query4, (err, result, fields) => {
                             if (err) {
                                 conn.end();
-                                return res.status(401).send(JSON.stringify(
+                                return res.status(500).send(JSON.stringify(
                                     {
                                         status: "INVALID_USER"
                                     }
@@ -136,7 +150,7 @@ const getChat = (req, res) => {
                             conn.query(query5, (err, result, fields) => {
                                 if (err) {
                                     conn.end();
-                                    return res.status(401).send(JSON.stringify(
+                                    return res.status(500).send(JSON.stringify(
                                         {
                                             status: "INVALID_USER"
                                         }
