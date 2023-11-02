@@ -8,7 +8,7 @@ const getChat = (req, res) => {
     let receiver_id = req.body.receiver_id
 
     try {
-        var decoded = jwt.verify(token, jwtSecretKey);
+        var decoded = jwt.verify(token, jwtSecretKey, {algorithms: [process.env.ALGORITHM]});
     } catch (err) {
         return res.status(401).send(JSON.stringify(
             {
