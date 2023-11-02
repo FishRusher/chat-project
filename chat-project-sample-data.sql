@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Lis 02, 2023 at 08:44 AM
+-- Generation Time: Lis 02, 2023 at 11:04 AM
 -- Wersja serwera: 10.4.28-MariaDB
 -- Wersja PHP: 8.2.4
 
@@ -22,6 +22,10 @@ SET time_zone = "+00:00";
 --
 
 -- --------------------------------------------------------
+
+--
+-- Dumping data for table `chatroom_message`
+--
 
 INSERT INTO `chatroom_message` (`message_id`, `sender_id`, `receiver_id`, `message_content`, `message_date`) VALUES
 (1, 2, 1, '\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque efficitur ex nec urna euismod, eget sodales nisi rutrum. Fusce cursus, odio ac rutrum ultricies, sem orci egestas dui, a malesuada quam arcu id libero.', '2023-11-02 08:35:01'),
@@ -57,3 +61,24 @@ INSERT INTO `users` (`user_id`, `user_nick`, `user_password`) VALUES
 (1, 'JanKowalski', 'cc03e747a6afbbcbf8be7668acfebee5'),
 (2, 'AdamNowak', 'cc03e747a6afbbcbf8be7668acfebee5'),
 (3, 'CristianoRonaldo', 'cc03e747a6afbbcbf8be7668acfebee5');
+
+
+ALTER TABLE `chatroom_message`
+  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `forwarded_message`
+--
+ALTER TABLE `forwarded_message`
+  MODIFY `forwarded_message_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
