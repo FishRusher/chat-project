@@ -9,13 +9,14 @@ import ForwardPanel from './ForwardPanel'
 const ChatBox = () => {
     const receiver_id = useParams()["user_id"]
     const [chat, setChat] = useState([])
-    const users = useOutletContext()
+    const [users, addAlert] = useOutletContext()
     const [receiverNick, setReceiverNick] = useState("???")
     const navigate = useNavigate()
 
     const [modalOpen, setModalOpen] = useState(false)
     const [forwardMessageId, setForwardMessageId] = useState(-1)
     const [forwardMessageContent, setForwardMessageContent] = useState("")
+
     const closeModal = () => {
         setModalOpen(false)
         setForwardMessageId(-1)
@@ -61,7 +62,9 @@ const ChatBox = () => {
                 }
             })
             .catch(e => {
-                alert("Błąd")
+                if (addAlert !== null) {
+                    addAlert({ severity: "error", content: "Błąd wysyłania wiadomości" })
+                }
             })
     }
 
@@ -91,7 +94,9 @@ const ChatBox = () => {
                 setReceiverNick(response.receiver_nick)
             })
             .catch(e => {
-
+                if (addAlert !== null) {
+                    addAlert({ severity: "error", content: "Błąd pobierania chatu" })
+                }
             })
 
     }

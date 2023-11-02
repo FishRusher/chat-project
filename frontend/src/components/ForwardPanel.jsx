@@ -1,11 +1,13 @@
 import { Box, Button, Checkbox, Paper } from '@mui/material'
 import { blue } from '@mui/material/colors'
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useOutletContext } from 'react-router-dom'
 
 const ForwardPanel = ({ message_id, message_content, users, closeModal }) => {
     const navigate = useNavigate()
     const [forwardTo, setForwardTo] = useState([])
+
+    const [u, addAlert] = useOutletContext()
 
     function updateForward(id) {
         if (forwardTo.indexOf(id) !== -1) {
@@ -17,7 +19,7 @@ const ForwardPanel = ({ message_id, message_content, users, closeModal }) => {
     }
 
     function forwardMessage() {
-        if (forwardTo.length == 0) return
+        if (forwardTo.length === 0) return
 
         const data = {
             jwt: localStorage.getItem("jwt"),
@@ -39,14 +41,18 @@ const ForwardPanel = ({ message_id, message_content, users, closeModal }) => {
                     navigate("/login")
                 }
                 if (response.status !== "OK") {
-                    alert(response.status)
+                    if (addAlert !== null) {
+                        addAlert({severity: "error", content: response.status})
+                    }
                 }
                 else {
                     closeModal()
                 }
             })
             .catch(e => {
-                alert("Błąd")
+                if (addAlert !== null) {
+                    addAlert({severity: "error", content: "Błąd"})
+                }
             })
     }
 

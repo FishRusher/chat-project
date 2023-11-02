@@ -30,3 +30,17 @@ body, html {
     -ms-border-radius: 100px;
     -o-border-radius: 100px;
 }
+
+.disappearing {
+    animation: disappear 4000ms linear;
+    opacity: 0;
+}
+
+@keyframes disappear {
+    0%, 50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}

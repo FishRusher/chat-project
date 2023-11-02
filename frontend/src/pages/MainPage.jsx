@@ -1,14 +1,17 @@
 import { Box, Button, Paper } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import UsersList from '../components/UsersList'
 import { Logout } from '@mui/icons-material'
+import AlertLogger from '../components/AlertLogger'
 
 const MainPage = () => {
     const navigate = useNavigate()
 
     const [users, setUsers] = useState([])
     const [nick, setNick] = useState("???")
+
+    let alertLoggerRef = useRef(null)
 
     useEffect(() => {
         const data = { jwt: localStorage.getItem("jwt") }
@@ -50,7 +53,9 @@ const MainPage = () => {
                 }
             })
             .catch(e => {
-                alert("Błąd")
+                if (alertLoggerRef.current !== null) {
+                    alertLoggerRef.current.addAlert({ severity: "error", content: "Błąd" })
+                }
             })
 
     }, [])
@@ -77,8 +82,10 @@ const MainPage = () => {
             </Box>
 
             <Paper elevation={7} sx={{ height: "100%", flexGrow: 3, flexBasis: 0 }}>
-                <Outlet context={users}></Outlet>
+                {alertLoggerRef.current !== null ? <Outlet context={[users, alertLoggerRef.current.addAlert]}></Outlet> : ""}
             </Paper>
+
+            <AlertLogger ref={alertLoggerRef}></AlertLogger>
         </Box>
     )
 }
