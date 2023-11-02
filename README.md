@@ -1,5 +1,3 @@
-**JAK URUCHOMIĆ APKĘ REACTA**\
-Potrzebne moduły
-- @mui/material @emotion/react @emotion/styled
-- react-router-dom
-- react react-dom react-scripts
+**Jak uruchomić projekt po raz pierwszy**
+
+W miejscach, gdzie znajdują się pliki `.env.template` należy utworzyć pliki `.env` zgodnie z zawartością plików template i wypełnić własnymi parametrami uruchomieniowymi
