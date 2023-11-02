@@ -15,8 +15,15 @@ const register = (req, res) => {
     })
 
     conn.connect((err) => {
-        if (err)
-            throw err
+        if(err){
+            conn.end();
+            return res.status(500).send(JSON.stringify(
+                {
+                    status: "ERROR"
+                }
+            ))
+        }
+        
         let query = `select * from users where user_nick='${nick}'`
         conn.query(query, (err, result, fields) => {
             if (err)

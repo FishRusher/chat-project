@@ -15,13 +15,25 @@ const login = (req, res) => {
     })
 
     conn.connect( (err) => {
-        if(err)
-            throw err
+        if(err){
+            conn.end();
+            return res.status(500).send(JSON.stringify(
+                {
+                    status: "ERROR"
+                }
+            ))
+        }
         
         let query = `select user_id from users where user_nick='${nick}' and user_password='${hashed_password}'`
         conn.query(query, (err, result, fields) => {
-            if(err)
-                throw err
+            if(err){
+                conn.end();
+                return res.status(500).send(JSON.stringify(
+                    {
+                        status: "ERROR"
+                    }
+                ))
+            }
             let token = null;
             if(result.length == 1){
 
@@ -47,7 +59,7 @@ const login = (req, res) => {
                 ))
             }
             else{
-                return res.status(404).send(JSON.stringify(
+                return res.status(401).send(JSON.stringify(
                     {
                         status: "NOT_LOGGED",
                         jwt: token
