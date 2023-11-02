@@ -13,11 +13,11 @@ root.render(
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<MainPage></MainPage>}>
-          <Route path=':user_id' element={<ChatBox></ChatBox>}></Route>
+          <Route path='chat/:user_id' element={<ChatBox></ChatBox>}></Route>
         </Route>
         <Route path='register' element={<RegisterPage/>}></Route>
         <Route path="login" element={<LoginPage></LoginPage>}></Route>
-        <Route path='*' element={<div>ERROR 404</div>}></Route>
+        <Route path='*' element={<div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>ERROR 404</div>}></Route>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
