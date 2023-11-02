@@ -23,7 +23,7 @@ const getChat = (req, res) => {
         host: "localhost",
         user: "root",
         password: "",
-        database: "chat-project"
+        database: process.env.DATABASE_NAME
     })
 
     conn.connect((err) => {
@@ -87,7 +87,7 @@ const getChat = (req, res) => {
 
                     let receiver_nick = ""
 
-                    let query3 = `select forwarded_message.message_id, forwarded_message.sender_id, forwarded_message.receiver_id, forwarded_message.message_date, chatroom_message.message_content, users.user_nick from forwarded_message join chatroom_message on forwarded_message.message_id=chatroom_message.message_id join users on chatroom_message.sender_id=users.user_id where forwarded_message.receiver_id='${sender_id}' and forwarded_message.sender_id='${receiver_id}'`
+                    let query3 = `select forwarded_message.forwarded_message_id, forwarded_message.message_id, forwarded_message.sender_id, forwarded_message.receiver_id, forwarded_message.message_date, chatroom_message.message_content, users.user_nick from forwarded_message join chatroom_message on forwarded_message.message_id=chatroom_message.message_id join users on chatroom_message.sender_id=users.user_id where forwarded_message.receiver_id='${sender_id}' and forwarded_message.sender_id='${receiver_id}'`
                     conn.query(query3, (err, result, fields) => {
                         if (err) {
                             conn.end();
@@ -100,7 +100,7 @@ const getChat = (req, res) => {
 
                         for (let message of result) {
                             messageList.push({
-                                message_id: message.message_id,
+                                message_id: message.forwarded_message_id + "-" + message.message_id,
                                 incoming: true,
                                 forwarded: true,
                                 original_sender_nick: message.user_nick,
@@ -109,7 +109,7 @@ const getChat = (req, res) => {
                             })
                         }
 
-                        let query4 = `select forwarded_message.message_id, forwarded_message.sender_id, forwarded_message.receiver_id, forwarded_message.message_date, chatroom_message.message_content, users.user_nick from forwarded_message join chatroom_message on forwarded_message.message_id=chatroom_message.message_id join users on chatroom_message.sender_id=users.user_id where forwarded_message.receiver_id='${receiver_id}' and forwarded_message.sender_id='${sender_id}'`
+                        let query4 = `select forwarded_message.forwarded_message_id, forwarded_message.message_id, forwarded_message.sender_id, forwarded_message.receiver_id, forwarded_message.message_date, chatroom_message.message_content, users.user_nick from forwarded_message join chatroom_message on forwarded_message.message_id=chatroom_message.message_id join users on chatroom_message.sender_id=users.user_id where forwarded_message.receiver_id='${receiver_id}' and forwarded_message.sender_id='${sender_id}'`
                         conn.query(query4, (err, result, fields) => {
                             if (err) {
                                 conn.end();
@@ -120,9 +120,10 @@ const getChat = (req, res) => {
                                 ))
                             }
 
+                            
                             for (let message of result) {
                                 messageList.push({
-                                    message_id: message.message_id,
+                                    message_id: message.forwarded_message_id + "-" + message.message_id,
                                     incoming: false,
                                     forwarded: true,
                                     original_sender_nick: message.user_nick,

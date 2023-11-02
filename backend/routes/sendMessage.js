@@ -25,7 +25,7 @@ const sendMessage = (req, res) => {
         host: "localhost",
         user: "root",
         password: "",
-        database: "chat-project"
+        database: process.env.DATABASE_NAME
     })
 
     conn.connect((err) => {
