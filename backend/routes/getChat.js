@@ -1,6 +1,5 @@
 const mysql = require("mysql");
 const jwt = require("jsonwebtoken");
-const dotenv = require('dotenv');
 const MD5 = require("crypto-js/md5");
 
 const getChat = (req, res) => {
