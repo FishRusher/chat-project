@@ -1,0 +1,15 @@
+User login credentials
+
+--------------------------
+1.
+login: JanKowalski
+password: test123
+--------------------------
+2.
+login: AdamNowak
+password: test123
+--------------------------
+3.
+login: CristianoRonaldo
+password: test123
+--------------------------
