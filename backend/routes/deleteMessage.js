@@ -9,7 +9,7 @@ const deleteMessage = (req, res) => {
     let message_id = req.body.message_id
     
     try {
-        var decoded = jwt.verify(token, jwtSecretKey);
+        var decoded = jwt.verify(token, jwtSecretKey, {algorithms: [process.env.ALGORITHM]});
     } catch(err) {
         return res.status(401).send(JSON.stringify(
             {

@@ -7,7 +7,7 @@ const getNick = (req, res) => {
     let token = req.body.jwt
 
     try {
-        var decoded = jwt.verify(token, jwtSecretKey);
+        var decoded = jwt.verify(token, jwtSecretKey, {algorithms: [process.env.ALGORITHM]});
     } catch (err) {
         return res.status(401).send(JSON.stringify(
             {

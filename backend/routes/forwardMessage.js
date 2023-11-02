@@ -9,7 +9,7 @@ const forwardMessage = (req, res) => {
     let receiver_ids = req.body.forward_to
     let decoded;
     try {
-        decoded = jwt.verify(token, jwtSecretKey);
+        decoded = jwt.verify(token, jwtSecretKey, {algorithms: [process.env.ALGORITHM]});
     } catch (err) {
         console.log(err)
         return res.status(401).send(JSON.stringify(
