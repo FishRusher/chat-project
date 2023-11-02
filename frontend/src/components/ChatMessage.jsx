@@ -27,7 +27,7 @@ const ChatMessage = ({ message, openForwardPanel, getChat }) => {
 
     return (
         <Box sx={{ display: "flex", justifyContent: message.incoming ? "flex-start" : "flex-end" }}>
-            <Box sx={{ maxWidth: "80%", m: 1 }}>
+            <Box sx={{ maxWidth: "70%", m: 1 }}>
                 <Box sx={{ color: "#909090", textAlign: message.incoming ? "left" : "right" }}>{getStringDate(message.message_date)}</Box>
                 <Box sx={getStyles()}>
                     {(!message.forwarded) && <MessageSettings getChat={getChat} incoming={message.incoming} message_id={message.message_id} openForwardPanel={() => openForwardPanel(message.message_id, message.message_content)}></MessageSettings>}
